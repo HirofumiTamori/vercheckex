@@ -14,10 +14,8 @@ Also Github setting is correctly completed.
 
 ## Build and run
 
-1.
-    mix deps.get
-2.
-    mix run vercheck.ex
+    $ mix deps.get
+    $ mix run vercheck.ex
 
 ## Run Behind Proxy
 
