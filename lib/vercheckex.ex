@@ -5,36 +5,26 @@ defmodule VercheckEx do
 
   def type1(url) do
     ret = HTTPoison.get!( url )
-
     %HTTPoison.Response{status_code: 200, body: body} = ret
-
     {_,_,n} = Floki.find(body, ".js-current-repository a") |> List.first
-
     {_,_,x} = Floki.find(body, ".tag-name span") |> List.first
-
     {_, d} = Floki.find(body, "time") |> Floki.attribute("datetime") 
                                       |> List.first 
                                       |> Timex.DateFormat.parse("{ISOz}")
     d =Timex.Date.local(d, Timex.Date.timezone("JST"))
-
     {hd(n),hd(x),d}
   end
 
 
   def type2(url) do
     ret = HTTPoison.get!( url )
-
     %HTTPoison.Response{status_code: 200, body: body} = ret
-
     {_,_,n} = Floki.find(body, ".js-current-repository a") |> List.first
-
     {_,_,x} = Floki.find(body, ".css-truncate-target span") |> List.first
-
     {_, d} = Floki.find(body, "time") |> Floki.attribute("datetime") 
                                       |> List.first 
                                       |> Timex.DateFormat.parse("{ISOz}")
     d =Timex.Date.local(d, Timex.Date.timezone("JST"))
-
     {hd(n),hd(x),d}
   end
 
@@ -44,8 +34,7 @@ defmodule VercheckEx do
     if String.length(title) < 8 do
       l = l <> "\t"
     end
-    l = l <> "\t"
-    l = l <> ver
+    l = l <> "\t" <> ver
     if String.length(ver) < 8 do
       l = l <> "\t"
     end
