@@ -4,7 +4,7 @@ defmodule Vercheckex.Mixfile do
   def project do
     [app: :vercheckex,
      version: "0.0.1",
-     elixir: "~> 1.0",
+     elixir: "~> 1.1-dev",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      deps: deps]
@@ -14,8 +14,7 @@ defmodule Vercheckex.Mixfile do
   #
   # Type `mix help compile.app` for more information
   def application do
-  #    [applications: [:httpoison]]
-    [applications: []]
+    [applications: [:httpoison]]
   end
 
   # Dependencies can be Hex packages:
@@ -29,9 +28,10 @@ defmodule Vercheckex.Mixfile do
   # Type `mix help deps` for more examples and options
   defp deps do
     [
-      {:httpoison, "~> 0.6.2"},
+      {:httpoison, "~> 0.6"},
       {:floki, "~> 0.2"},
-      {:timex, "~> 0.13.4"}
+      {:timex, "~> 0.13.4"},
+      {:array, "~> 1.0.1"}
     ]
   end
 end
