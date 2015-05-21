@@ -30,8 +30,7 @@ defmodule VercheckEx do
     if String.length(title) < 8 do
       l = l <> "\t"
     end
-    l = l <> "\t"
-    l = l <> ver
+    l = l <> "\t" <> ver
     if String.length(ver) < 8 do
       l = l <> "\t"
     end
@@ -61,7 +60,10 @@ urls = [
   {"https://github.com/docker/docker/releases", :type1},
   {"https://github.com/JuliaLang/julia/releases", :type2},
   {"https://github.com/Araq/Nim/releases", :type1},
-  {"https://github.com/elixir-lang/elixir/releases", :type2}]
+  {"https://github.com/elixir-lang/elixir/releases", :type2},
+  {"https://github.com/philss/floki/releases", :type1},
+  {"https://github.com/takscape/elixir-array/releases", :type2},
+]
 
 Enum.each(urls, fn(i) -> 
   {u,t} = i
