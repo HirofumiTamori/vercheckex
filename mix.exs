@@ -30,8 +30,7 @@ defmodule Vercheckex.Mixfile do
     [
       {:httpoison, "~> 0.6"},
       {:floki, "~> 0.2"},
-      {:timex, "~> 0.13.4"},
-      {:array, "~> 1.0.1"}
+      {:timex, "~> 0.13.4"}
     ]
   end
 end
