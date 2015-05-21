@@ -23,7 +23,6 @@ defmodule VercheckEx do
         end
         d =Timex.Date.local(d, Timex.Date.timezone("JST"))
         send caller, {:ok, {hd(n),hd(x),d,i}}
-        #fetch_content() # loop 
         # this process dies after sending the message.
       end
   end
@@ -52,12 +51,9 @@ defmodule VercheckEx do
     if( length(result_list) < n ) do
       receive do
         {:ok, res} ->
-          # IO.puts "Received #{inspect(res)}"
-          #put_a_formatted_line res
           receiver( result_list++[res], n )
       end
     else # all results are gathered
-      #IO.puts "#{inspect result_list}"
       Enum.sort(result_list, fn(a,b) -> # sort by index number
         {_,_,_,i1} = a
         {_,_,_,i2} = b
@@ -89,10 +85,7 @@ fetchers = for _ <- 0..length(urls), do: spawn_link fn -> VercheckEx.fetch_conte
 
 Enum.each( urls, fn(x) ->
   {u,t,i} = x
-  #IO.puts "#{inspect(Enum.at(fetchers,i))}"
-  #IO.puts "#{inspect(send Enum.at(fetchers,i), {self, u, t, i})}"
   send Enum.at(fetchers,i), {self, u, t, i}
-  #IO.puts "#{inspect(send hd(fetchers), {self, u, t})}"
 end)
 
 result_list = []
