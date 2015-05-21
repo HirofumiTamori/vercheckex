@@ -3,39 +3,25 @@ defmodule VercheckEx do
   require Floki
   require Timex
 
-  def type1(url) do
+  def fetch_content(url, type) do
     ret = HTTPoison.get!( url )
 
     %HTTPoison.Response{status_code: 200, body: body} = ret
 
     {_,_,n} = Floki.find(body, ".js-current-repository a") |> List.first
-
-    {_,_,x} = Floki.find(body, ".tag-name span") |> List.first
-
     {_, d} = Floki.find(body, "time") |> Floki.attribute("datetime") 
                                       |> List.first 
                                       |> Timex.DateFormat.parse("{ISOz}")
+    if(type == :type1) do
+      {_,_,x} = Floki.find(body, ".tag-name span") |> List.first
+    else
+      {_,_,x} = Floki.find(body, ".css-truncate-target span") |> List.first
+    end
+
     d =Timex.Date.local(d, Timex.Date.timezone("JST"))
 
     {hd(n),hd(x),d}
-  end
 
-
-  def type2(url) do
-    ret = HTTPoison.get!( url )
-
-    %HTTPoison.Response{status_code: 200, body: body} = ret
-
-    {_,_,n} = Floki.find(body, ".js-current-repository a") |> List.first
-
-    {_,_,x} = Floki.find(body, ".css-truncate-target span") |> List.first
-
-    {_, d} = Floki.find(body, "time") |> Floki.attribute("datetime") 
-                                      |> List.first 
-                                      |> Timex.DateFormat.parse("{ISOz}")
-    d =Timex.Date.local(d, Timex.Date.timezone("JST"))
-
-    {hd(n),hd(x),d}
   end
 
   def put_a_formatted_line(val) do
@@ -79,9 +65,5 @@ urls = [
 
 Enum.each(urls, fn(i) -> 
   {u,t} = i
-  if t == :type1 do
-    VercheckEx.put_a_formatted_line VercheckEx.type1(u)
-  else
-    VercheckEx.put_a_formatted_line VercheckEx.type2(u)
-  end
+  VercheckEx.put_a_formatted_line VercheckEx.fetch_content(u,t)
 end)
