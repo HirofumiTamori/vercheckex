@@ -69,14 +69,15 @@ urls = [ #{ URL, type, index}
   {"https://github.com/PuerkitoBio/goquery/releases", :type1, 3},
   {"https://github.com/revel/revel/releases", :type2, 4},
   {"https://github.com/lhorie/mithril.js/releases", :type1, 5},
-  {"https://github.com/atom/atom/releases", :type2, 6},
-  {"https://github.com/Microsoft/TypeScript/releases", :type2, 7},
-  {"https://github.com/docker/docker/releases", :type1, 8},
-  {"https://github.com/JuliaLang/julia/releases", :type2, 9},
-  {"https://github.com/Araq/Nim/releases", :type1, 10},
-  {"https://github.com/elixir-lang/elixir/releases", :type2, 11},
-  {"https://github.com/philss/floki/releases", :type1, 12},
-  {"https://github.com/takscape/elixir-array/releases", :type2, 13},
+  {"https://github.com/riot/riot/releases", :type1, 6},
+  {"https://github.com/atom/atom/releases", :type2, 7},
+  {"https://github.com/Microsoft/TypeScript/releases", :type2, 8},
+  {"https://github.com/docker/docker/releases", :type1, 9},
+  {"https://github.com/JuliaLang/julia/releases", :type2, 10},
+  {"https://github.com/Araq/Nim/releases", :type1, 11},
+  {"https://github.com/elixir-lang/elixir/releases", :type2, 12},
+  {"https://github.com/philss/floki/releases", :type1, 13},
+  {"https://github.com/takscape/elixir-array/releases", :type2, 14},
 ]
 
 # Spawn processes upto the number of URLs
