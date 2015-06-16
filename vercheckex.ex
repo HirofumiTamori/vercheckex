@@ -74,7 +74,7 @@ urls = [ #{ URL, type, index}
   {"https://github.com/Microsoft/TypeScript/releases", :type2, 8},
   {"https://github.com/docker/docker/releases", :type1, 9},
   {"https://github.com/JuliaLang/julia/releases", :type2, 10},
-  {"https://github.com/Araq/Nim/releases", :type1, 11},
+  {"https://github.com/nim-lang/Nim/releases", :type1, 11},
   {"https://github.com/elixir-lang/elixir/releases", :type2, 12},
   {"https://github.com/philss/floki/releases", :type1, 13},
   {"https://github.com/takscape/elixir-array/releases", :type2, 14},
