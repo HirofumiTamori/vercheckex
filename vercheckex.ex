@@ -63,28 +63,28 @@ defmodule VercheckEx do
 end
 
 urls = [ #{ URL, type, index}
-  {"https://github.com/jquery/jquery/releases", :type1, 0},
-  {"https://github.com/angular/angular/releases", :type1, 1},
-  {"https://github.com/facebook/react/releases", :type2, 2},
-  {"https://github.com/PuerkitoBio/goquery/releases", :type1, 3},
-  {"https://github.com/revel/revel/releases", :type2, 4},
-  {"https://github.com/lhorie/mithril.js/releases", :type1, 5},
-  {"https://github.com/riot/riot/releases", :type1, 6},
-  {"https://github.com/atom/atom/releases", :type2, 7},
-  {"https://github.com/Microsoft/TypeScript/releases", :type2, 8},
-  {"https://github.com/docker/docker/releases", :type1, 9},
-  {"https://github.com/JuliaLang/julia/releases", :type2, 10},
-  {"https://github.com/nim-lang/Nim/releases", :type1, 11},
-  {"https://github.com/elixir-lang/elixir/releases", :type2, 12},
-  {"https://github.com/philss/floki/releases", :type1, 13},
-  {"https://github.com/takscape/elixir-array/releases", :type2, 14},
+  {"https://github.com/jquery/jquery/releases", :type1},
+  {"https://github.com/angular/angular/releases", :type1},
+  {"https://github.com/facebook/react/releases", :type2},
+  {"https://github.com/PuerkitoBio/goquery/releases", :type1},
+  {"https://github.com/revel/revel/releases", :type2},
+  {"https://github.com/lhorie/mithril.js/releases", :type1},
+  {"https://github.com/riot/riot/releases", :type1},
+  {"https://github.com/atom/atom/releases", :type2},
+  {"https://github.com/Microsoft/TypeScript/releases", :type2},
+  {"https://github.com/docker/docker/releases", :type1},
+  {"https://github.com/JuliaLang/julia/releases", :type2},
+  {"https://github.com/nim-lang/Nim/releases", :type1},
+  {"https://github.com/elixir-lang/elixir/releases", :type2},
+  {"https://github.com/philss/floki/releases", :type1},
+  {"https://github.com/takscape/elixir-array/releases", :type2},
 ]
 
 # Spawn processes upto the number of URLs
 fetchers = for _ <- 0..length(urls), do: spawn_link fn -> VercheckEx.fetch_content() end
 
-Enum.each( urls, fn(x) ->
-  {u,t,i} = x
+Enum.with_index(urls)|>Enum.each( fn(x) ->
+  {{u,t},i} = x
   send Enum.at(fetchers,i), {self, u, t, i}
 end)
 
