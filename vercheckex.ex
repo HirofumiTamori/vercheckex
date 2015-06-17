@@ -77,7 +77,7 @@ urls = [ #{ URL, type, index}
   {"https://github.com/Microsoft/TypeScript/releases", :type2},
   {"https://github.com/docker/docker/releases", :type1},
   {"https://github.com/JuliaLang/julia/releases", :type2},
-  {"https://github.com/Araq/Nim/releases", :type1},
+  {"https://github.com/nim-lang/Nim/releases", :type1},
   {"https://github.com/elixir-lang/elixir/releases", :type2},
   {"https://github.com/philss/floki/releases", :type1},
   {"https://github.com/takscape/elixir-array/releases", :type2},
@@ -86,7 +86,7 @@ urls = [ #{ URL, type, index}
 # Spawn processes upto the number of URLs
 fetchers = for _ <- 0..length(urls), do: spawn_link fn -> VercheckEx.fetch_content() end
 
-Enum.each( Enum.with_index(urls), fn(x) ->
+Enum.with_index(urls)|>Enum.each( fn(x) ->
   {{u,t},i} = x
   send Enum.at(fetchers,i), {self, u, t, i}
 end)
