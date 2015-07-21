@@ -7,14 +7,20 @@ defmodule Vercheckex.Mixfile do
      elixir: "~> 1.0",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
+     escript: escript,
      deps: deps]
+  end
+
+  def escript do
+    [main_module: VercheckEx]
   end
 
   # Configuration for the OTP application
   #
   # Type `mix help compile.app` for more information
   def application do
-    [applications: [:httpoison]]
+    [applications: [:httpoison, :floki, :timex],
+    mod: {VercheckEx, []}]
   end
 
   # Dependencies can be Hex packages:
