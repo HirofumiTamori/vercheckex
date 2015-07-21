@@ -15,7 +15,17 @@ Also Github setting is correctly completed.
 ## Build and run
 
     $ mix deps.get
-    $ mix run vercheck.ex
+    $ iex -S mix
+
+After iex invoked, type
+
+    iex(1)> VercheckEx.main []
+
+## Build a command line executable
+
+    $ mix escript.build
+
+The command line executable, VercheckEx is generated.
 
 ## Run Behind Proxy
 
