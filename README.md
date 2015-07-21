@@ -25,7 +25,7 @@ After iex invoked, type
 
     $ mix escript.build
 
-The command line executable, VercheckEx is generated.
+The command line executable, vercheckex is generated.
 
 ## Run Behind Proxy
 
