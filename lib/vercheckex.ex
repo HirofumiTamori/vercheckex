@@ -1,5 +1,6 @@
 defmodule VercheckEx do
   use Application
+  use GenServer
   require HTTPoison
   require Floki
   require Timex
@@ -13,32 +14,30 @@ defmodule VercheckEx do
   end
         
 
-  def fetch_content() do
-    receive do
-      {caller, url, type, i} ->
-        #IO.puts "URL = #{url}"
-        ret = HTTPoison.get!( url )
+  def fetch_content(param) do
+    {{url, type}, i} = param
+    #IO.puts "URL = #{url}"
+    #IO.puts "i = #{i}"
+    ret = HTTPoison.get!( url )
 
-        %HTTPoison.Response{status_code: 200, body: body} = ret
+    %HTTPoison.Response{status_code: 200, body: body} = ret
 
-        {_,_,n} = Floki.find(body, ".container strong a") |> List.first
-        {_, d} = Floki.find(body, "time") |> Floki.attribute("datetime") 
-                                          |> List.first 
-                                          |> Timex.DateFormat.parse("{ISOz}")
-        if(type == :type1) do
-          #IO.puts "type1"
-          {_,_,x} = Floki.find(body, ".tag-name span") |> List.first
-        else
-          {_,_,x} = Floki.find(body, ".css-truncate-target span") |> List.first
-        end
-        d =Timex.Date.local(d, Timex.Date.timezone("JST"))
-        send caller, {:ok, {hd(n),hd(x),d,i}}
-        # this process dies after sending the message.
-      end
+    {_,_,n} = Floki.find(body, ".container strong a") |> List.first
+    {_, d} = Floki.find(body, "time") |> Floki.attribute("datetime") 
+                                      |> List.first 
+                                      |> Timex.DateFormat.parse("{ISOz}")
+    if(type == :type1) do
+      #IO.puts "type1"
+      {_,_,x} = Floki.find(body, ".tag-name span") |> List.first
+    else
+      {_,_,x} = Floki.find(body, ".css-truncate-target span") |> List.first
+    end
+    d =Timex.Date.local(d, Timex.Date.timezone("JST"))
+    {:ok, {hd(n),hd(x),d,i}}
   end
 
-  def put_a_formatted_line(val) do
-    {title, ver, date, _} = val
+  defp put_a_formatted_line(val) do
+    {:ok, {title, ver, date, _}} = val
     l = title
     if String.length(title) < 8 do
       l = l <> "\t"
@@ -57,22 +56,9 @@ defmodule VercheckEx do
     IO.puts(l)
   end
 
-  def receiver(result_list, n) do
-    if( length(result_list) < n ) do
-      receive do
-        {:ok, res} ->
-          receiver( result_list++[res], n )
-      end
-    else # all results are gathered
-      Enum.sort(result_list, fn(a,b) -> # sort by index number
-        {_,_,_,i1} = a
-        {_,_,_,i2} = b
-        i1 < i2 end)|>Enum.each( fn(x) -> put_a_formatted_line x end)
-    end
-  end
 
   def main(args) do
-    urls = [ #{ URL, type, index}
+    urls = [ #{ URL, type}
       {"https://github.com/jquery/jquery/releases", :type1},
       {"https://github.com/angular/angular/releases", :type1},
       {"https://github.com/facebook/react/releases", :type2},
@@ -90,16 +76,17 @@ defmodule VercheckEx do
       {"https://github.com/takscape/elixir-array/releases", :type2},
     ]
 
-    # Spawn processes upto the number of URLs
-    fetchers = for _ <- 0..length(urls), do: spawn_link fn -> VercheckEx.fetch_content() end
-
-    Enum.with_index(urls)|>Enum.each( fn(x) ->
-      {{u,t},i} = x
-      send Enum.at(fetchers,i), {self, u, t, i}
-    end)
-
-    result_list = []
-    VercheckEx.receiver(result_list, length(urls))
+    urls
+    |> Enum.with_index
+    |> Enum.map(&(Task.async(fn -> fetch_content(&1) end)))
+    |> Enum.map(&(Task.await/1))
+    |> Enum.sort(fn(a,b) ->
+      {:ok, {_, _, _, i1}} = a
+      {:ok, {_, _, _, i2}} = b
+      i1 < i2
+    end
+    )
+    |> Enum.map(&put_a_formatted_line/1)
 
   end
 
