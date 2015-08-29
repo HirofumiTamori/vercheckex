@@ -35,8 +35,8 @@ defmodule Vercheckex.Mixfile do
   defp deps do
     [
       {:httpoison, "~> 0.6"},
-      {:floki, "~> 0.2"},
-      {:timex, "~> 0.13.4"}
+      {:floki, "~> 0.3.3"},
+      {:timex, "~> 0.19.2"}
     ]
   end
 end

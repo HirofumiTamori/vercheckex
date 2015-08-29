@@ -32,7 +32,9 @@ defmodule VercheckEx do
     else
       {_,_,x} = Floki.find(body, ".css-truncate-target span") |> List.first
     end
-    d =Timex.Date.local(d, Timex.Date.timezone("JST"))
+    #    d =Timex.Date.local(d, Timex.Date.timezone("JST"))
+    d |> Timex.Date.Convert.to_erlang_datetime
+      |> Timex.Date.from "Asia/Tokyo"
     {:ok, {hd(n),hd(x),d,i}}
   end
 
