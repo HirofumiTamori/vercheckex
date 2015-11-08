@@ -27,14 +27,13 @@ defmodule VercheckEx do
                                       |> List.first 
                                       |> Timex.DateFormat.parse("{ISOz}")
     if(type == :type1) do
-      #IO.puts "type1"
-      {_,_,x} = Floki.find(body, ".tag-name span") |> List.first
+      {_,[{_,_}],x} = Floki.find(body, ".tag-name") |> List.first
     else
-      {_,_,x} = Floki.find(body, ".css-truncate-target span") |> List.first
+      {_,[{_,_}],x} = Floki.find(body, ".release-title a") |> List.first
     end
-    #    d =Timex.Date.local(d, Timex.Date.timezone("JST"))
     d |> Timex.Date.Convert.to_erlang_datetime
       |> Timex.Date.from "Asia/Tokyo"
+      #IO.inspect n
     {:ok, {hd(n),hd(x),d,i}}
   end
 
@@ -61,16 +60,16 @@ defmodule VercheckEx do
 
   def main(args) do
     urls = [ #{ URL, type}
-      {"https://github.com/jquery/jquery/releases", :type1},
-      {"https://github.com/angular/angular/releases", :type1},
-      {"https://github.com/facebook/react/releases", :type2},
-      {"https://github.com/PuerkitoBio/goquery/releases", :type1},
-      {"https://github.com/revel/revel/releases", :type2},
+      #{"https://github.com/jquery/jquery/releases", :type1},
+      #{"https://github.com/angular/angular/releases", :type1},
+      #{"https://github.com/facebook/react/releases", :type2},
+      #{"https://github.com/PuerkitoBio/goquery/releases", :type1},
+      #{"https://github.com/revel/revel/releases", :type2},
       {"https://github.com/lhorie/mithril.js/releases", :type1},
       {"https://github.com/riot/riot/releases", :type1},
-      {"https://github.com/atom/atom/releases", :type2},
-      {"https://github.com/Microsoft/TypeScript/releases", :type2},
-      {"https://github.com/docker/docker/releases", :type1},
+      #{"https://github.com/atom/atom/releases", :type2},
+      #{"https://github.com/Microsoft/TypeScript/releases", :type1},
+      #{"https://github.com/docker/docker/releases", :type1},
       {"https://github.com/JuliaLang/julia/releases", :type2},
       {"https://github.com/nim-lang/Nim/releases", :type1},
       {"https://github.com/elixir-lang/elixir/releases", :type2},
