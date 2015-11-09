@@ -80,7 +80,7 @@ defmodule VercheckEx do
     urls
     |> Enum.with_index
     |> Enum.map(&(Task.async(fn -> fetch_content(&1) end)))
-    |> Enum.map(&(Task.await/1))
+    |> Enum.map(&(Task.await(&1,10000)))
     |> Enum.sort(fn(a,b) ->
       {:ok, {_, _, _, i1}} = a
       {:ok, {_, _, _, i2}} = b
