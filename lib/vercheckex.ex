@@ -13,9 +13,26 @@ defmodule VercheckEx do
     Supervisor.start_link(children, opts)
   end
         
+  def parse_title(body, :type1) do
+    try do
+      {_,[{_,_}],x} = Floki.find(body, ".tag-name") |> List.first
+      {:ok, x}
+    rescue
+      what -> {:error, what}
+    end
+  end 
+
+  def parse_title(body, :type2) do
+    try do
+      {_,[{_,_}],x} = Floki.find(body, ".release-title a") |> List.first
+      {:ok, x}
+    rescue
+      what -> {:error, what}
+    end
+  end
 
   def fetch_content(param) do
-    {{url, type}, i} = param
+    {{url}, i} = param
     #IO.puts "URL = #{url}"
     #IO.puts "i = #{i}"
     ret = HTTPoison.get!( url )
@@ -26,11 +43,15 @@ defmodule VercheckEx do
     {_, d} = Floki.find(body, "time") |> Floki.attribute("datetime") 
                                       |> List.first 
                                       |> Timex.DateFormat.parse("{ISOz}")
-    if(type == :type1) do
-      {_,[{_,_}],x} = Floki.find(body, ".tag-name") |> List.first
-    else
-      {_,[{_,_}],x} = Floki.find(body, ".release-title a") |> List.first
+                                      
+
+    {result,x} = parse_title(body, :type1)
+    # retry if parse_title failed(with Missing Pattern Error)
+    if result == :error do
+      {_,x} = parse_title(body, :type2)
+      x
     end
+
     d |> Timex.Date.Convert.to_erlang_datetime
       |> Timex.Date.from "Asia/Tokyo"
       #IO.inspect n
@@ -59,22 +80,22 @@ defmodule VercheckEx do
 
 
   def main(args) do
-    urls = [ #{ URL, type}
-      {"https://github.com/jquery/jquery/releases", :type1},
-      {"https://github.com/angular/angular/releases", :type1},
-      {"https://github.com/facebook/react/releases", :type2},
-      {"https://github.com/PuerkitoBio/goquery/releases", :type1},
-      {"https://github.com/revel/revel/releases", :type2},
-      {"https://github.com/lhorie/mithril.js/releases", :type1},
-      {"https://github.com/riot/riot/releases", :type1},
-      {"https://github.com/atom/atom/releases", :type2},
-      {"https://github.com/Microsoft/TypeScript/releases", :type2},
-      {"https://github.com/docker/docker/releases", :type2},
-      {"https://github.com/JuliaLang/julia/releases", :type2},
-      {"https://github.com/nim-lang/Nim/releases", :type1},
-      {"https://github.com/elixir-lang/elixir/releases", :type2},
-      {"https://github.com/philss/floki/releases", :type1},
-      {"https://github.com/takscape/elixir-array/releases", :type2},
+    urls = [ #{ URL }
+      {"https://github.com/jquery/jquery/releases"},
+      {"https://github.com/angular/angular/releases"},
+      {"https://github.com/facebook/react/releases"},
+      {"https://github.com/PuerkitoBio/goquery/releases"},
+      {"https://github.com/revel/revel/releases"},
+      {"https://github.com/lhorie/mithril.js/releases"},
+      {"https://github.com/riot/riot/releases"},
+      {"https://github.com/atom/atom/releases"},
+      {"https://github.com/Microsoft/TypeScript/releases"},
+      {"https://github.com/docker/docker/releases"},
+      {"https://github.com/JuliaLang/julia/releases"},
+      {"https://github.com/nim-lang/Nim/releases"},
+      {"https://github.com/elixir-lang/elixir/releases"},
+      {"https://github.com/philss/floki/releases"},
+      {"https://github.com/takscape/elixir-array/releases"},
     ]
 
     urls
