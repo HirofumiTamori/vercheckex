@@ -13,7 +13,7 @@ defmodule VercheckEx do
     Supervisor.start_link(children, opts)
   end
         
-  def parse_title(body, :type1) do
+  defp parse_title(body, :type1) do
     try do
       {_,[{_,_}],x} = Floki.find(body, ".tag-name") |> List.first
       {:ok, x}
@@ -22,7 +22,7 @@ defmodule VercheckEx do
     end
   end 
 
-  def parse_title(body, :type2) do
+  defp parse_title(body, :type2) do
     try do
       {_,[{_,_}],x} = Floki.find(body, ".release-title a") |> List.first
       {:ok, x}
