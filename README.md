@@ -38,7 +38,7 @@ Change
 to
 
 ```elixir
-     ret = HTTPoison.get!( url, [], [{:proxy, {"proxy.yoursite.com", 8080}}])  )
+     ret = HTTPoison.get!( url, [], [{:proxy, "proxy.mycompany.com:port"}] )
 ```
 
 
